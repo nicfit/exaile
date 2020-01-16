@@ -141,6 +141,21 @@ class BaseFormat:
         if self.writable and self.mutagen:
             self.mutagen.save()
 
+    def _init_tag(self, raw):
+        """Initialization tag iff necessary. Returns when a new tag was added."""
+        # Add tags if it doesn't have them. Mutagen will throw an exception
+        # if the file already contains tags.
+        if getattr(raw, 'tags', None) is None:
+            try:
+                raw.add_tags()
+                return True
+            except Exception:
+                # XXX: Not sure needed since we're already checking for
+                # existence of tags.
+                pass
+
+        return False
+
     def _del_tag(self, raw, tag):
         '''
             :param tag: The native tag name
@@ -261,15 +276,7 @@ class BaseFormat:
         else:
             tagdict = copy.deepcopy(tagdict)
             raw = self._get_raw()
-            # Add tags if it doesn't have them. Mutagen will throw an exception
-            # if the file already contains tags.
-            if getattr(raw, 'tags', None) is None:
-                try:
-                    raw.add_tags()
-                except Exception:
-                    # XXX: Not sure needed since we're already checking for
-                    # existence of tags.
-                    pass
+            self._init_tag(raw)
 
             # tags starting with __ are internal and should not be written
             # -> this covers INFO_TAGS, which also shouldn't be written
