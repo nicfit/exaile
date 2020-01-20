@@ -1,0 +1,6 @@
+-r tools/installer/requirements.txt
+PyGObject
+PyGObject-stubs
+bsddb3
+dbus-python
+eyeD3
