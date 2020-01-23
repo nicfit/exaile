@@ -35,8 +35,10 @@ logger = logging.getLogger(__name__)
 
 from xl import version
 import mutagen
+import eyed3
 
 version.register('Mutagen', mutagen.version_string)
+version.register('eyeD3', eyed3.version)
 
 
 INFO_TAGS = ['__bitrate', '__length']
